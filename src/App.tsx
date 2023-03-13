@@ -1,19 +1,10 @@
 import {
-  IonApp,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonMenu,
-  IonMenuToggle,
-  IonRouterOutlet,
-  IonTitle,
-  IonToolbar,
+  IonApp,  
+  // IonRouterOutlet,
   setupIonicReact,
 } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
+// import { IonReactRouter } from "@ionic/react-router";
+
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -33,56 +24,23 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { Redirect, Route } from "react-router-dom";
-import AllActivities from "./pages/AllActivities/AllActivities";
-import AddActivity from "./pages/AddActivity/AddActivity";
-import { addOutline, leafOutline } from "ionicons/icons";
-import ActivitiesContextProvider from "./data/ActivitiesContextProvider";
+import ChatButton from "./components/ChatButton/ChatButton";
+// import { Redirect, Route } from "react-router-dom";
+// import ChatWelcome from "./pages/ChatWelcome/ChatWelcome";
+// import ChatWindow from "./pages/ChatWindow/ChatWindow";
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <IonMenu contentId="mainContent">
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Menu Content</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonList>
-            <IonMenuToggle>
-              <IonItem
-                routerLink="/all-activities"
-                routerDirection="none"
-                lines="none"
-              >
-                <IonIcon icon={leafOutline} color="medium" slot="start" />
-                <IonLabel>All activities</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
-            <IonMenuToggle>
-              <IonItem
-                routerLink="/add-activity"
-                routerDirection="none"
-                lines="none"
-              >
-                <IonIcon icon={addOutline} color="medium" slot="start" />
-                <IonLabel>Add activity</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
-          </IonList>
-        </IonContent>
-      </IonMenu>
-      <ActivitiesContextProvider>
-        <IonRouterOutlet id="mainContent">
-          <Route path="/all-activities" component={AllActivities} exact />
-          <Route path="/add-activity" component={AddActivity} exact />
-          <Redirect to="/all-activities" />
+    <ChatButton isOpen={false} isWelcome={false}/>
+    {/* <IonReactRouter>
+        <IonRouterOutlet>
+          <Route path="/" component={ChatWelcome} exact />
+          <Route path="/chat" component={ChatWindow} exact />
+          <Redirect to="/" />
         </IonRouterOutlet>
-      </ActivitiesContextProvider>
-    </IonReactRouter>
+    </IonReactRouter> */}
   </IonApp>
 );
 

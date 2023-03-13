@@ -1,0 +1,21 @@
+.imageRobot {
+    position: relative;
+    width: 82%;
+    left: 12%;
+    top: 12%;
+}
+
+h1 {
+    position: relative;
+    font-size: 1.7em;
+    font-weight: bold;
+    right: 20%;
+    margin-top: 16%;
+}
+
+h5 {
+    position: relative;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+

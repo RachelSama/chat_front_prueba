@@ -1,0 +1,12 @@
+.messageRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.messageCol {
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 15px;
+    max-width: 60%;
+}
