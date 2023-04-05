@@ -1,47 +1,40 @@
-import {
-  IonApp,  
-  // IonRouterOutlet,
-  setupIonicReact,
-} from "@ionic/react";
-// import { IonReactRouter } from "@ionic/react-router";
-
-
-/* Core CSS required for Ionic components to work properly */
-import "@ionic/react/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
-import "@ionic/react/css/normalize.css";
-import "@ionic/react/css/structure.css";
-import "@ionic/react/css/typography.css";
-
-/* Optional CSS utils that can be commented out */
-import "@ionic/react/css/padding.css";
-import "@ionic/react/css/float-elements.css";
-import "@ionic/react/css/text-alignment.css";
-import "@ionic/react/css/text-transformation.css";
-import "@ionic/react/css/flex-utils.css";
-import "@ionic/react/css/display.css";
-
-/* Theme variables */
-import "./theme/variables.css";
-import ChatButton from "./components/ChatButton/ChatButton";
-// import { Redirect, Route } from "react-router-dom";
-// import ChatWelcome from "./pages/ChatWelcome/ChatWelcome";
-// import ChatWindow from "./pages/ChatWindow/ChatWindow";
+import React, { useState } from 'react';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
+import { Route } from 'react-router-dom';
+import '@ionic/react/css/core.css';
+import '@ionic/react/css/normalize.css';
+import '@ionic/react/css/structure.css';
+import '@ionic/react/css/typography.css';
+import './theme/variables.css';
+import ChatButton from './components/ChatButton/ChatButton';
+import ChatWelcome from './pages/ChatWelcome/ChatWelcome';
+import ChatWindow from './pages/ChatWindow/ChatWindow';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <ChatButton isOpen={false} isWelcome={false}/>
-    {/* <IonReactRouter>
+const App: React.FC = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handleChatOpen = () => {
+    setIsChatOpen(true);
+  };
+
+  const handleChatClose = () => {
+    setIsChatOpen(false);
+  };
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <ChatButton isOpen={isChatOpen} onOpen={handleChatOpen} onClose={handleChatClose} />
         <IonRouterOutlet>
-          <Route path="/" component={ChatWelcome} exact />
-          <Route path="/chat" component={ChatWindow} exact />
-          <Redirect to="/" />
+          <Route exact path="/chat" component={ChatWelcome} />
+          <Route exact path="/chat/:topic" component={ChatWindow} />
         </IonRouterOutlet>
-    </IonReactRouter> */}
-  </IonApp>
-);
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

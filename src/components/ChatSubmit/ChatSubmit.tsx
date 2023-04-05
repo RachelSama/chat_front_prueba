@@ -29,7 +29,7 @@ const ChatSubmit: React.FC<ChatSubmitProps> = ({ handleSubmit }) => {
                         <IonInput
                             value={inputValue}
                             onIonChange={handleChange}
-                            style={{ flex: 1, fontSize: 18, padding: 10 }}
+                            style={{ flex: 1, fontSize: 18,  backgroundColor: 'white', color: 'black'}}
                             placeholder="Escribe aquí..."
                         />
                     </IonCol>

@@ -1,11 +1,12 @@
 .imageRobot {
     position: relative;
-    width: 82%;
-    left: 12%;
+    width: 70%;
+    left: 20%;
     top: 12%;
 }
 
 h1 {
+    color: black;
     position: relative;
     font-size: 1.7em;
     font-weight: bold;
@@ -14,8 +15,10 @@ h1 {
 }
 
 h5 {
+    color: black;
     position: relative;
     font-size: 0.9em;
     font-weight: bold;
+    right: 10%;
 }
 

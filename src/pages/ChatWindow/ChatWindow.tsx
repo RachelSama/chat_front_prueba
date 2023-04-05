@@ -1,5 +1,7 @@
-import { IonContent, IonPage, IonToolbar } from '@ionic/react';
+import axios from 'axios';
+import { IonCol, IonContent, IonGrid, IonPage, IonRow, IonToolbar } from '@ionic/react';
 import React, { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import classes from './ChatWindow.module.css'
 
@@ -7,27 +9,51 @@ import HeaderChat from '../../components/HeaderChat/HeaderChat';
 import ChatMessageList from '../../components/ChatMessageList/ChatMessageList';
 import ChatSubmit from '../../components/ChatSubmit/ChatSubmit';
 
-interface ChatWindowProps {
-    selectedOption: string;
-}
-
-function ChatWindow(props: ChatWindowProps) {
-    const { selectedOption } = props;
+function ChatWindow() {
     const [messages, setMessages] = useState<{ message: string; isBot: boolean; }[]>([]);
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const { topic } = useParams<{ topic: string }>();
     let welcomeBot = 0;
+
+    // Obtener las constantes del archivo .env
+    const BASE_URL = process.env.BASE_URL;
+    const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+    const USER_ID = process.env.USER_ID;
+
+    // Crear una función que envíe la petición para crear una sala de chat
+    const createChatRoom = async () => {
+        try {
+            const response = await axios.post(`${BASE_URL}/_matrix/client/r0/createRoom`, {
+                preset: "chatbot", //public_chat
+                room_alias_name: "chatbot", //nombre-de-la-sala
+                topic: "chatbot" //tema-de-la-sala
+            }, {
+                headers: {
+                    Authorization: `Bearer ${ACCESS_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                params: {
+                    access_token: ACCESS_TOKEN
+                }
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     useEffect(() => {
         if (welcomeBot === 0 && messages.length === 0) {
-            const botMessage = { message: sendMessage(selectedOption), isBot: true };
+            const botMessage = { message: sendMessage(topic), isBot: true };
             setMessages(prevMessages => [...prevMessages, botMessage]);
             welcomeBot++;
         }
         // Hacer scroll hacia abajo cuando se agregue un nuevo mensaje
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-    }, [selectedOption, welcomeBot, messages]);
+    }, [topic, welcomeBot, messages]);
 
     const handleSubmit = (message: string) => {
         const newMessages = [...messages, { message, isBot: false }];
@@ -36,7 +62,7 @@ function ChatWindow(props: ChatWindowProps) {
         setIsTyping(true);
 
         setTimeout(() => {
-            const botMessage = { message: sendMessage(selectedOption), isBot: true };
+            const botMessage = { message: sendMessage(topic), isBot: true };
             setMessages(prevMessages => [...prevMessages, botMessage]);
             setIsTyping(false);
         }, 2000);
@@ -64,18 +90,23 @@ function ChatWindow(props: ChatWindowProps) {
     };
 
     return (
-        <IonPage className={classes.pageChat}>
-
-            <IonContent>
-                <IonToolbar>
-                    <HeaderChat isTyping={isTyping} setIsTyping={setIsTyping} />
-                </IonToolbar>
-                <ChatMessageList messages={messages} />
-                <div ref={messagesEndRef} />
-
-            </IonContent>
-            <ChatSubmit handleSubmit={handleSubmit} />
-
+        <IonPage style={{ display: 'block' }}>
+            <IonGrid>
+                <IonRow>
+                    <IonCol sizeXs='12' sizeSm='8' sizeMd='6' sizeLg='5' sizeXl='3.5'>
+                        <div className={classes.chatContent}>
+                            <IonToolbar>
+                                <HeaderChat isTyping={isTyping} setIsTyping={setIsTyping} />
+                            </IonToolbar>
+                            <div className={classes.chatContentMessages}>
+                                <ChatMessageList messages={messages} />
+                                <div ref={messagesEndRef} />
+                            </div>
+                            <ChatSubmit handleSubmit={handleSubmit} />
+                        </div>
+                    </IonCol>
+                </IonRow>
+            </IonGrid>
         </IonPage>
     );
 }

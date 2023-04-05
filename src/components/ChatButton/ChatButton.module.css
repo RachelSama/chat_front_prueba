@@ -1,3 +1,12 @@
 .chatButton {
     float: right;
+    margin: 15%;
+}
+
+ion-modal {
+    --border-radius: 35px 0px 0px 0px;
+}
+
+ion-modal::part(backdrop) {
+    background: rgba(255, 255, 255, 0);
 }

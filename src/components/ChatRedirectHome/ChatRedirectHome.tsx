@@ -1,16 +1,20 @@
-import { IonIcon } from '@ionic/react';
+import { IonButton, IonIcon } from '@ionic/react';
 import { home } from 'ionicons/icons';
-import ChatButton from '../ChatButton/ChatButton';
+import { useHistory } from 'react-router-dom';
 import classes from './ChatRedirectHome.module.css'
 
 function ChatRedirectHome() {
-    
-    const handleSubmit = () => {
-        <ChatButton isOpen={true} isWelcome={false}/>
+
+    const history = useHistory();
+
+    const handleClick = () => {
+        history.goBack();
     };
 
     return (
-        <IonIcon icon={home} className={classes.iconHome} title="Inicio" onClick={handleSubmit} />
+        <IonButton fill="clear" onClick={() => handleClick()} className={classes.buttonHome} title="Inicio">
+            <IonIcon slot="icon-only" icon={home} className={classes.iconHome} title="Inicio"/>
+        </IonButton>
     );
 }
 

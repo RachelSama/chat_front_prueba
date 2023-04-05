@@ -1,41 +1,33 @@
+import React from 'react';
 import { IonFab, IonFabButton } from '@ionic/react';
-import React, { useState } from 'react';
-import ChatWelcome from '../../pages/ChatWelcome/ChatWelcome';
-import ChatWindow from '../../pages/ChatWindow/ChatWindow';
+import { useHistory } from 'react-router-dom';
+import classes from './ChatButton.module.css';
 
-import classes from './ChatButton.module.css'
-
-interface ChatButtonProps {
+type Props = {
   isOpen: boolean;
-  isWelcome: boolean;
-}
+  onOpen: () => void;
+  onClose: () => void;
+};
 
-// ============= Hacer que los props sean opcionales ======================
-
-function ChatButton(props: ChatButtonProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isWelcome, setIsWelcome] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('');
+function ChatButton({ isOpen, onOpen, onClose }: Props) {
+  const history = useHistory();
 
   const handleClick = () => {
-    setIsOpen(!isOpen);
+    if (isOpen) {
+      history.push('/');
+      onClose();
+    } else {
+      history.push('/chat');
+      onOpen();
+    }
   };
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsWelcome(true)
-  }
-
   return (
-    <>
-        <IonFab slot="fixed" vertical="bottom" horizontal="end" className='ion-margin'>
-          {isOpen && !isWelcome && <ChatWelcome handleOptionSelect={handleOptionSelect} />}
-          {isOpen && isWelcome && <ChatWindow selectedOption={selectedOption} />}
-          <IonFabButton color="danger" onClick={handleClick} className={classes.chatButton}>
-            {isOpen ? 'X' : '💬'}
-          </IonFabButton>
-        </IonFab>
-    </>
+    <IonFab slot="fixed" vertical="bottom" horizontal="end" className="ion-margin">
+      <IonFabButton color="danger" onClick={handleClick} className={classes.chatButton}>
+        {isOpen ? 'X' : '💬'}
+      </IonFabButton>
+    </IonFab>
   );
 }
 
