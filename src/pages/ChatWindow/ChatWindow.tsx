@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { IonCol, IonContent, IonGrid, IonPage, IonRow, IonToolbar } from '@ionic/react';
+// import axios from 'axios';
+import { IonCol, IonGrid, IonPage, IonRow, IonToolbar } from '@ionic/react';
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -15,34 +15,6 @@ function ChatWindow() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const { topic } = useParams<{ topic: string }>();
     let welcomeBot = 0;
-
-    // Obtener las constantes del archivo .env
-    const BASE_URL = process.env.BASE_URL;
-    const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
-    const USER_ID = process.env.USER_ID;
-
-    // Crear una función que envíe la petición para crear una sala de chat
-    const createChatRoom = async () => {
-        try {
-            const response = await axios.post(`${BASE_URL}/_matrix/client/r0/createRoom`, {
-                preset: "chatbot", //public_chat
-                room_alias_name: "chatbot", //nombre-de-la-sala
-                topic: "chatbot" //tema-de-la-sala
-            }, {
-                headers: {
-                    Authorization: `Bearer ${ACCESS_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                params: {
-                    access_token: ACCESS_TOKEN
-                }
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
 
     useEffect(() => {
         if (welcomeBot === 0 && messages.length === 0) {
