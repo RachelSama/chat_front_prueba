@@ -1,5 +1,5 @@
 // import axios from 'axios';
-import { IonCol, IonGrid, IonPage, IonRow, IonToolbar } from '@ionic/react';
+import { IonCol, IonGrid, IonHeader, IonPage, IonRow, IonToolbar } from '@ionic/react';
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ socket }) => {
 
     useEffect(() => {
         const room = localStorage.getItem("roomName")
-        if(room) {
+        if (room) {
             setRoomName(room)
         }
         socket.emit('getRoomData', roomName);
@@ -74,9 +74,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ socket }) => {
                 <IonRow>
                     <IonCol sizeXs='12' sizeSm='8' sizeMd='6' sizeLg='5' sizeXl='3.5'>
                         <div className={classes.chatContent}>
-                            <IonToolbar>
-                                <HeaderChat isTyping={isTyping} setIsTyping={setIsTyping} />
-                            </IonToolbar>
+                            <IonHeader>
+                                <IonToolbar>
+                                    <HeaderChat isTyping={isTyping} setIsTyping={setIsTyping} />
+                                </IonToolbar>
+                            </IonHeader>
                             <div className={classes.chatContentMessages}>
                                 <ChatMessageList roomName={roomName} socket={socket} />
                             </div>

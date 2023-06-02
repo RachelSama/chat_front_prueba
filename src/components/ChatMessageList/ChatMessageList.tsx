@@ -50,7 +50,6 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({ roomName, socket }) =
                                         <p>{parsedMessage.text}</p>
                                         <p className={classes.message__timestamp}>{formattedDateTime}</p>
                                     </div>
-                                    <div ref={messagesEndRef} />
                                 </IonRow>
                             ) : (
                                 <IonRow className={classes.messageRow} key={index} style={{ flexDirection: 'row-reverse' }}>
@@ -65,13 +64,12 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({ roomName, socket }) =
                                         <p>{parsedMessage.text}</p>
                                         <p className={classes.message__timestamp}>{formattedDateTime}</p>
                                     </div>
-                                    <div ref={messagesEndRef} />
                                 </IonRow>
                             );
                         })}
                     </div>
-                    <div ref={messagesEndRef} />
                 </IonGrid>
+                <div ref={messagesEndRef} />
             </IonContent>
         </IonCard>
     );
