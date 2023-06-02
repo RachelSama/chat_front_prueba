@@ -1,0 +1,46 @@
+.chatContent {
+    width: 100%;
+    height: 700px;
+    background-color: rgb(243, 240, 237);
+}
+
+.home__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.home__container>* {
+    margin-bottom: 10px;
+}
+
+.home__header {
+    margin-bottom: 30px;
+    color: black;
+}
+
+.username__input,
+.password__input {
+    margin: 2%;
+    padding: 10px;
+    width: 30%;
+    border: 2px solid #da5f40;
+}
+
+/* Cambios para alinear verticalmente las etiquetas */
+.home__container ion-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.home__container ion-label {
+    margin-bottom: 5px;
+}
+
+.home__container ion-input {
+    width: 100%;
+}

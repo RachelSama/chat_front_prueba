@@ -2,25 +2,47 @@ import React from 'react';
 import { IonFab, IonFabButton } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import classes from './ChatButton.module.css';
+import { Socket } from 'socket.io-client';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
+  socket: Socket;
 };
 
-function ChatButton({ isOpen, onOpen, onClose }: Props) {
+function ChatButton({ isOpen, onOpen, onClose, socket }: Props) {
   const history = useHistory();
 
   const handleClick = () => {
     if (isOpen) {
       history.push('/');
+      console.log("cerrando ventana...")
       onClose();
     } else {
-      history.push('/chat');
-      onOpen();
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        console.log("token guardado: " + storedToken)
+        // Realizar una solicitud a la base de datos para obtener el usuario y la contraseña asociados al token
+        socket.emit('getUserData', storedToken, (data: any) => {
+          if (data && data.username && data.password) {
+            const dataUser = {
+              username: data.username,
+              password: data.password
+            }
+            socket.emit("login", dataUser)
+            history.push('/chat');
+            console.log("abriendo ventana...")
+            onOpen();
+          }
+        });
+      } else {
+        history.push('/login')
+      }
     }
   };
+
+
 
   return (
     <IonFab slot="fixed" vertical="bottom" horizontal="end" className="ion-margin">

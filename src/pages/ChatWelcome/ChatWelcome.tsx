@@ -4,8 +4,13 @@ import { IonButton, IonCol, IonGrid, IonPage, IonRow } from '@ionic/react';
 import HeaderWelcome from '../../components/HeaderWelcome/HeaderWelcome';
 import { useHistory } from "react-router-dom";
 
+import { Socket } from 'socket.io-client';
 
-function ChatWelcome() {
+interface ChatWelcomeProps {
+  socket: Socket;
+}
+
+const ChatWelcome: React.FC<ChatWelcomeProps> = ({ socket }) => {
   const history = useHistory();
 
   const handleClick = (topic: string) => {
@@ -13,7 +18,7 @@ function ChatWelcome() {
   };
 
   return (
-    <IonPage style={{ display: 'block'}}>
+    <IonPage style={{ display: 'block' }}>
       <IonGrid>
         <IonRow>
           <IonCol sizeXs='12' sizeSm='8' sizeMd='6' sizeLg='5' sizeXl='3.5'>

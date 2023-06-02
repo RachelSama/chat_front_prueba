@@ -3,8 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ChatRedirectHome from '../ChatRedirectHome/ChatRedirectHome';
 import classes from './HeaderChat.module.css';
+import ChatLeave from '../ChatLeave/ChatLeave';
 
 function HeaderChat(props: { isTyping: boolean, setIsTyping: (value: boolean) => void }) {
+
     return (
         <IonGrid className={classes.backgroundHeader}>
             <IonRow>
@@ -27,6 +29,11 @@ function HeaderChat(props: { isTyping: boolean, setIsTyping: (value: boolean) =>
                 <IonCol size='2'>
                     <Router>
                         <ChatRedirectHome />
+                    </Router>
+                </IonCol>
+                <IonCol size='2'>
+                    <Router>
+                        <ChatLeave />
                     </Router>
                 </IonCol>
             </IonRow>

@@ -1,7 +1,7 @@
 // import axios from 'axios';
 import { IonCol, IonGrid, IonPage, IonRow, IonToolbar } from '@ionic/react';
-import React, { useState, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
 import classes from './ChatWindow.module.css'
 
@@ -9,37 +9,44 @@ import HeaderChat from '../../components/HeaderChat/HeaderChat';
 import ChatMessageList from '../../components/ChatMessageList/ChatMessageList';
 import ChatSubmit from '../../components/ChatSubmit/ChatSubmit';
 
-function ChatWindow() {
-    const [messages, setMessages] = useState<{ message: string; isBot: boolean; }[]>([]);
+import { Socket } from 'socket.io-client';
+
+interface ChatWindowProps {
+    socket: Socket;
+}
+
+const ChatWindow: React.FC<ChatWindowProps> = ({ socket }) => {
     const [isTyping, setIsTyping] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
     const { topic } = useParams<{ topic: string }>();
+    const [roomName, setRoomName] = useState("");
+    const history = useHistory();
     let welcomeBot = 0;
 
     useEffect(() => {
-        if (welcomeBot === 0 && messages.length === 0) {
-            const botMessage = { message: sendMessage(topic), isBot: true };
-            setMessages(prevMessages => [...prevMessages, botMessage]);
-            welcomeBot++;
+        const room = localStorage.getItem("roomName")
+        if(room) {
+            setRoomName(room)
         }
-        // Hacer scroll hacia abajo cuando se agregue un nuevo mensaje
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-
-    }, [topic, welcomeBot, messages]);
-
-    const handleSubmit = (message: string) => {
-        const newMessages = [...messages, { message, isBot: false }];
-
-        setMessages(newMessages);
-        setIsTyping(true);
-
-        setTimeout(() => {
-            const botMessage = { message: sendMessage(topic), isBot: true };
-            setMessages(prevMessages => [...prevMessages, botMessage]);
-            setIsTyping(false);
-        }, 2000);
-    };
-
+        socket.emit('getRoomData', roomName);
+        socket.on('roomData', (messages) => {
+            if (welcomeBot === 0 && messages.length === 0) {
+                setIsTyping(true);
+                setTimeout(() => {
+                    socket.emit("message",
+                        {
+                            text: sendMessage(topic),
+                            name: "Unobike",
+                            id: `${socket.id}${Math.random()}`,
+                            socketID: socket.id,
+                            room: roomName,
+                        }
+                    )
+                    setIsTyping(false);
+                }, 2000);
+                welcomeBot++;
+            }
+        })
+    }, [topic, welcomeBot, roomName, socket, history]);
 
     const sendMessage = (selectedOption: string) => {
         let response = '';
@@ -51,7 +58,7 @@ function ChatWindow() {
             case 'pedido':
                 response = 'Para consultar el estado de tu pedido, por favor indique el número de seguimiento.';
                 break;
-            case 'iformacion':
+            case 'informacion':
                 response = '¿Que información puedo ofrecerte?';
                 break;
             default:
@@ -71,10 +78,9 @@ function ChatWindow() {
                                 <HeaderChat isTyping={isTyping} setIsTyping={setIsTyping} />
                             </IonToolbar>
                             <div className={classes.chatContentMessages}>
-                                <ChatMessageList messages={messages} />
-                                <div ref={messagesEndRef} />
+                                <ChatMessageList roomName={roomName} socket={socket} />
                             </div>
-                            <ChatSubmit handleSubmit={handleSubmit} />
+                            <ChatSubmit roomName={roomName} socket={socket} />
                         </div>
                     </IonCol>
                 </IonRow>
@@ -84,3 +90,5 @@ function ChatWindow() {
 }
 
 export default ChatWindow;
+
+

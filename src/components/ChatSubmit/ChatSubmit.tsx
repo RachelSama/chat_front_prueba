@@ -2,23 +2,34 @@ import React, { useState } from 'react';
 import { IonButton, IonCol, IonGrid, IonInput, IonRow } from '@ionic/react';
 import classes from './ChatSubmit.module.css'
 import { InputChangeEventDetail, IonInputCustomEvent } from '@ionic/core';
-
+import { Socket } from 'socket.io-client';
 
 interface ChatSubmitProps {
-    handleSubmit: (message: string) => void;
+    roomName: string;
+    socket: Socket;
 }
 
-const ChatSubmit: React.FC<ChatSubmitProps> = ({ handleSubmit }) => {
-    const [inputValue, setInputValue] = useState('');
+const ChatSubmit: React.FC<ChatSubmitProps> = ({ roomName, socket }) => {
+    const [message, setMessage] = useState("")
 
     const handleChange = (event: IonInputCustomEvent<InputChangeEventDetail>) => {
-        setInputValue(event.detail.value ?? "");
+        setMessage(event.detail.value ?? "");
     };
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        handleSubmit(inputValue);
-        setInputValue('');
+        if (message.trim() && localStorage.getItem("userName")) {
+            socket.emit("message",
+                {
+                    text: message,
+                    name: localStorage.getItem("userName"),
+                    id: `${socket.id}${Math.random()}`,
+                    socketID: socket.id,
+                    room: roomName,
+                }
+            )
+        }
+        setMessage('');
     };
 
     return (
@@ -27,9 +38,9 @@ const ChatSubmit: React.FC<ChatSubmitProps> = ({ handleSubmit }) => {
                 <IonRow>
                     <IonCol size='9'>
                         <IonInput
-                            value={inputValue}
+                            value={message}
                             onIonChange={handleChange}
-                            style={{ flex: 1, fontSize: 18,  backgroundColor: 'white', color: 'black'}}
+                            style={{ flex: 1, fontSize: 18, backgroundColor: 'white', color: 'black' }}
                             placeholder="Escribe aquí..."
                         />
                     </IonCol>
