@@ -1,78 +1,97 @@
-import { IonCard, IonContent, IonGrid, IonRow } from '@ionic/react';
+import { IonCard, IonCol, IonContent, IonGrid, IonRow } from '@ionic/react';
 import classes from './ChatMessageList.module.css';
 import { Socket } from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 
+interface Message {
+  user: string;
+  text: string;
+  timestamp: string;
+}
+
 interface ChatMessageListProps {
-    roomName: string;
-    socket: Socket;
+  roomName: string;
+  socket: Socket;
 }
 
 const ChatMessageList: React.FC<ChatMessageListProps> = ({ roomName, socket }) => {
-    const [messages, setMessages] = useState([]);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  const [messages, setMessages] = useState<Message[]>([]);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    socket.emit('getRoomData', roomName);
+    socket.on("roomData", (data: Message[]) => {
+      setMessages(data)
+    });
+  }, [roomName, socket, messages]);
+  
     useEffect(() => {
-        socket.emit('getRoomData', roomName);
-        socket.on("roomData", data => setMessages(data));
-    }, [roomName, messages, socket]);
-
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages.length]);
 
-    function formatDateTime(timestamp: string) {
-        const date = new Date(timestamp);
-        const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-        const formattedTime = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-        return `${formattedDate} ${formattedTime}`;
-    }
+  function formatDateTime(timestamp: string) {
+    const date = new Date(timestamp);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    const formattedTime = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+    return `${formattedDate} ${formattedTime}`;
+  }
 
-    return (
-        <IonCard className={classes.cardChat}>
-            <IonContent>
-                <IonGrid>
-                    <div className={classes.messageContainer}>
-                        {messages.map((message, index) => {
-                            const parsedMessage = JSON.parse(message);
-                            const formattedDateTime = formatDateTime(parsedMessage.timestamp);
+  return (
+    <IonCard className={classes.cardChat}>
+      <IonContent>
+        <IonGrid>
+          <div className={classes.messageContainer}>
+            {messages.map((message, index) => {
+              const formattedDateTime = formatDateTime(message.timestamp);
 
-                            return parsedMessage.user === 'Unobike' ? (
-                                <IonRow className={classes.messageRow} key={index} style={{ flexDirection: 'row' }}>
-                                    {/* <p className={classes.messageCol}>Tú</p> */}
-                                    <div
-                                        className={classes.messageCol}
-                                        style={{
-                                            backgroundColor: '#ac3939',
-                                            color: 'white',
-                                        }}
-                                    >
-                                        <p>{parsedMessage.text}</p>
-                                        <p className={classes.message__timestamp}>{formattedDateTime}</p>
-                                    </div>
-                                </IonRow>
-                            ) : (
-                                <IonRow className={classes.messageRow} key={index} style={{ flexDirection: 'row-reverse' }}>
-                                    {/* <p className={classes.messageCol}>{parsedMessage.user}</p> */}
-                                    <div
-                                        className={classes.messageCol}
-                                        style={{
-                                            backgroundColor: '#c5c5c5',
-                                            color: 'black',
-                                        }}
-                                    >
-                                        <p>{parsedMessage.text}</p>
-                                        <p className={classes.message__timestamp}>{formattedDateTime}</p>
-                                    </div>
-                                </IonRow>
-                            );
-                        })}
-                    </div>
-                </IonGrid>
-                <div ref={messagesEndRef} />
-            </IonContent>
-        </IonCard>
-    );
+              return message.user === 'Unobike' ? (
+                <IonRow className={classes.messageRow} key={index}>
+                  <IonCol>
+                    <IonRow style={{ flexDirection: 'row' }}>
+                      <div className={classes.messageCol}>{message.user}</div>
+                    </IonRow>
+                    <IonRow style={{ flexDirection: 'row' }}>
+                      <div
+                        className={classes.messageCol}
+                        style={{
+                          backgroundColor: '#ac3939',
+                          color: 'white',
+                        }}
+                      >
+                        <p>{message.text}</p>
+                        <p className={classes.message__timestamp}>{formattedDateTime}</p>
+                      </div>
+                    </IonRow>
+                  </IonCol>
+                </IonRow>
+              ) : (
+                <IonRow className={classes.messageRow} key={index}>
+                  <IonCol>
+                    <IonRow style={{ flexDirection: 'row-reverse' }}>
+                      <div className={classes.messageCol}>Tú</div>
+                    </IonRow>
+                    <IonRow style={{ flexDirection: 'row-reverse' }}>
+                      <div
+                        className={classes.messageCol}
+                        style={{
+                          backgroundColor: '#c5c5c5',
+                          color: 'black',
+                        }}
+                      >
+                        <p>{message.text}</p>
+                        <p className={classes.message__timestamp}>{formattedDateTime}</p>
+                      </div>
+                    </IonRow>
+                  </IonCol>
+                </IonRow>
+              );
+            })}
+          </div>
+        </IonGrid>
+        <div ref={lastMessageRef} />
+      </IonContent>
+    </IonCard>
+  );
 };
 
 export default ChatMessageList;

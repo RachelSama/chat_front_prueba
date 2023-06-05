@@ -20,11 +20,11 @@ function ChatButton({ isOpen, onOpen, onClose, socket }: Props) {
       console.log("cerrando ventana...")
       onClose();
     } else {
-      const storedToken = localStorage.getItem('token');
-      if (storedToken) {
-        console.log("token guardado: " + storedToken)
-        // Realizar una solicitud a la base de datos para obtener el usuario y la contraseña asociados al token
-        socket.emit('getUserData', storedToken, (data: any) => {
+      const storedUuid = localStorage.getItem('uuid');
+      if (storedUuid) {
+        console.log("uuid guardado: " + storedUuid)
+        // Realizar una solicitud a la base de datos para obtener el usuario y la contraseña asociados al uuid
+        socket.emit('getUserData', storedUuid, (data: any) => {
           if (data && data.username && data.password) {
             const dataUser = {
               username: data.username,

@@ -25,8 +25,8 @@ const Home: React.FC<{ socket: any }> = ({ socket }) => {
         localStorage.setItem('roomName', roomName);
       })
 
-      socket.on('localStorageToken', (token: string) => {
-        localStorage.setItem('token', token);
+      socket.on('localStorageUuid', (uuid: string) => {
+        localStorage.setItem('uuid', uuid);
       });
       history.push("/chat");
     }

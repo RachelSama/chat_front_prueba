@@ -11,7 +11,7 @@ function ChatLeave() {
 
         localStorage.removeItem("userName")
         localStorage.removeItem("roomName")
-        localStorage.removeItem("token")
+        localStorage.removeItem("uuid")
         history.push("/login")
         window.location.reload()
     };
