@@ -16,14 +16,31 @@ import socketIO from "socket.io-client"
 
 setupIonicReact();
 
+/**
+ * Este es un componente funcional de React que representa una aplicación de chat con diferentes rutas
+ * y una conexión de socket  utilizando la biblioteca socket.io-client y conectándola a un servidor que se ejecuta en
+ * `http://localhost:4000`. Esta instancia de socket se puede utilizar para emitir y recibir eventos
+ * entre el cliente y el servidor en tiempo real.
+ * @returns Se devuelve el componente App, que es un componente funcional de React que representa un
+ * componente IonApp del marco Ionic. El componente IonApp contiene un componente IonReactRouter que
+ * configura el enrutamiento para la aplicación. El enrutamiento se define mediante el componente
+ * IonRouterOutlet, que representa diferentes componentes en función de la ruta URL actual.
+ */
 const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
+
   const socket = socketIO("http://localhost:4000");
 
+  /**
+   * La función establece el estado de "isChatOpen" en verdadero.
+   */
   const handleChatOpen = () => {
     setIsChatOpen(true);
   };
 
+  /**
+   * Esta función establece el estado de "isChatOpen" en falso.
+   */
   const handleChatClose = () => {
     setIsChatOpen(false);
   };
@@ -33,7 +50,7 @@ const App: React.FC = () => {
       <IonReactRouter>
         <ChatButton isOpen={isChatOpen} onOpen={handleChatOpen} onClose={handleChatClose} socket={socket} />
         <IonRouterOutlet>
-          <Route path="/login">
+          <Route exact path="/login">
             <Home socket={socket} />
           </Route>
           <Route exact path="/chat">

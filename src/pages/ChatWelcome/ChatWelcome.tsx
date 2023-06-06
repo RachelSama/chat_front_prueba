@@ -10,9 +10,23 @@ interface ChatWelcomeProps {
   socket: Socket;
 }
 
+/**
+ * Este es un componente funcional en TypeScript React que muestra una pantalla de bienvenida de chat
+ * con tres botones para diferentes temas. Toma un accesorio `socket` de tipo `Socket` y usa el gancho
+ * `useHistory` de `react-router-dom` para manejar la navegación a diferentes temas de chat cuando se
+ * hace clic en un botón. El componente devuelve un elemento JSX que muestra la pantalla de bienvenida
+ * del chat con los tres botones.
+ */
 const ChatWelcome: React.FC<ChatWelcomeProps> = ({ socket }) => {
   const history = useHistory();
 
+  /**
+   * La función handleClick envía una nueva URL al historial del navegador con un parámetro de tema
+   * específico.
+   * @param {string} topic - El parámetro `topic` es una cadena que representa el tema de una
+   * conversación de chat. Se usa en la función `handleClick` para navegar a una sala de chat
+   * específica según el tema seleccionado.
+   */
   const handleClick = (topic: string) => {
     history.push(`/chat/${topic}`);
   };

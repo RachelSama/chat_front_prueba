@@ -11,9 +11,20 @@ type Props = {
   socket: Socket;
 };
 
+/**
+ * Este es un componente de React que maneja la apertura y el cierre de una ventana de chat, verifica
+ * los datos de usuario almacenados e inicia sesión en el usuario si está disponible.
+ * @param {Props}  - - isOpen: un valor booleano que indica si la ventana de chat está actualmente
+ * abierta o cerrada
+ * @returns Se devuelve el componente ChatButton.
+ */
 function ChatButton({ isOpen, onOpen, onClose, socket }: Props) {
   const history = useHistory();
 
+  /**
+   * Esta función maneja el evento de clic para abrir o cerrar una ventana de chat, verificar los datos
+   * de usuario almacenados e iniciar sesión si está disponible.
+   */
   const handleClick = () => {
     if (isOpen) {
       history.push('/');
@@ -41,8 +52,6 @@ function ChatButton({ isOpen, onOpen, onClose, socket }: Props) {
       }
     }
   };
-
-
 
   return (
     <IonFab slot="fixed" vertical="bottom" horizontal="end" className="ion-margin">

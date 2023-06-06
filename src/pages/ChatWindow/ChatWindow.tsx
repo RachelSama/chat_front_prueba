@@ -15,6 +15,12 @@ interface ChatWindowProps {
     socket: Socket;
 }
 
+/**
+ * Este es un componente funcional en TypeScript React que representa una ventana de chat. Toma un
+ * accesorio `socket` de tipo `Socket` e inicializa algunas variables de estado usando el gancho
+ * `useState`. También utiliza los ganchos `useParams` y `useHistory` de `react-router-dom` para
+ * obtener el parámetro `topic` de la URL y el historial del navegador, respectivamente.
+ */
 const ChatWindow: React.FC<ChatWindowProps> = ({ socket }) => {
     const [isTyping, setIsTyping] = useState(false);
     const { topic } = useParams<{ topic: string }>();
@@ -48,6 +54,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ socket }) => {
         })
     }, [topic, welcomeBot, roomName, socket, history]);
 
+    /**
+     * La función toma una opción seleccionada como entrada y devuelve un mensaje correspondiente como
+     * salida.
+     * @param {string} selectedOption - una cadena que representa la opción seleccionada por el
+     * usuario, que puede ser "compra", "pedido", "información", o cualquier otra cadena. La función
+     * devuelve un mensaje de respuesta basado en la opción seleccionada.
+     * @returns La función `sendMessage` devuelve un mensaje de cadena basado en la opción
+     * seleccionada. Si la opción seleccionada es "compra", devuelve un mensaje preguntando qué busca
+     * el usuario. Si la opción seleccionada es "pedido", devuelve un mensaje solicitando el número de
+     * seguimiento. Si la opción seleccionada es "información", devuelve un mensaje preguntando qué
+     * información necesita el usuario. Si ninguna de estas opciones es
+     */
     const sendMessage = (selectedOption: string) => {
         let response = '';
 
